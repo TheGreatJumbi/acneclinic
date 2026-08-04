@@ -73,37 +73,122 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add animation on scroll for feature cards
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
+// GSAP Animations - Inspired by madewithgsap.com
+gsap.registerPlugin(ScrollTrigger);
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
+// Hero animations on page load
+const tl = gsap.timeline();
+
+tl.from('.hero-title', {
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    ease: 'power3.out'
+})
+.from('.hero-subtitle', {
+    duration: 0.8,
+    y: 30,
+    opacity: 0,
+    ease: 'power3.out'
+}, '-=0.6')
+.from('.hero-buttons .btn', {
+    duration: 0.6,
+    y: 20,
+    opacity: 0,
+    stagger: 0.2,
+    ease: 'power3.out'
+}, '-=0.4')
+.from('.hero-bg-shape', {
+    duration: 1.5,
+    scale: 0.8,
+    opacity: 0,
+    ease: 'power2.out'
+}, '-=1');
+
+// Animate hero background shape on mouse move
+const heroSection = document.querySelector('.hero');
+const heroBgShape = document.querySelector('.hero-bg-shape');
+
+if (heroSection && heroBgShape) {
+    heroSection.addEventListener('mousemove', (e) => {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        gsap.to(heroBgShape, {
+            duration: 0.5,
+            x: xAxis,
+            y: yAxis,
+            ease: 'power2.out'
+        });
     });
-}, observerOptions);
+}
 
-// Observe feature cards
-document.querySelectorAll('.feature-card, .edu-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(30px)';
-    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(card);
+// Features section animation with ScrollTrigger
+gsap.utils.toArray('.feature-card').forEach((card, index) => {
+    gsap.from(card, {
+        scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 60,
+        opacity: 0,
+        duration: 0.8,
+        delay: index * 0.15,
+        ease: 'power3.out'
+    });
 });
 
-// Navbar background change on scroll
+// Section headers animation
+gsap.utils.toArray('.section-header').forEach(header => {
+    gsap.from(header, {
+        scrollTrigger: {
+            trigger: header,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+    });
+});
+
+// CTA section animation
+gsap.from('.cta-content', {
+    scrollTrigger: {
+        trigger: '.cta-section',
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out'
+});
+
+// Navbar animation on scroll
 const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
-    }
+gsap.to(navbar, {
+    scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: '+=100',
+        scrub: true
+    },
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    padding: '0.5rem 0'
+});
+
+// Add parallax effect to hero section
+gsap.to('.hero', {
+    scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+    },
+    backgroundPositionY: '50%'
 });
 
 console.log('The Acne Clinic website loaded successfully!');
+console.log('GSAP animations enabled ✨');
