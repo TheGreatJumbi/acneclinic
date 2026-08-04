@@ -1,4 +1,4 @@
-```
+```gitignore
 # Compiled and build artifacts
 *.pyc
 __pycache__/
@@ -21,17 +21,18 @@ node_modules/
 *.tmp
 *.swp
 *.swo
+*.out
 
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
 
 # Editors
 .vscode/
 .idea/
 
-# System
+# System files
 .DS_Store
 Thumbs.db
 
